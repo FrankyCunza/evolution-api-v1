@@ -29,7 +29,7 @@ services:
     networks:
       - evolution-net
     entrypoint: /bin/sh
-    # command: '-c "if [ -f /etc/nginx/conf.d/nginx.conf ]; then sed -i "s/ must-revalidate//g" /etc/nginx/conf.d/nginx.conf; fi && nginx -g "daemon off;" "'
+    command: '-c "if [ -f /etc/nginx/conf.d/nginx.conf ]; then sed -i "s/ must-revalidate//g" /etc/nginx/conf.d/nginx.conf; fi && nginx -g "daemon off;" "'
 
   redis:
     container_name: evolution_redis
