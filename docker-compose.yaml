@@ -31,7 +31,7 @@ services:
     environment:
       - VITE_API_URL=http://evolution_api:8080
     entrypoint: /bin/sh
-    command: '-c "if [ -f /etc/nginx/conf.d/nginx.conf ]; then sed -i \"s/ must-revalidate//g\" /etc/nginx/conf.d/nginx.conf; fi && nginx -g \"daemon off;\" "'
+    command: '-c "sed -i "s/ must-revalidate//g" /etc/nginx/conf.d/nginx.conf && nginx -g "daemon off;" "'
 
   redis:
     container_name: evolution_redis
