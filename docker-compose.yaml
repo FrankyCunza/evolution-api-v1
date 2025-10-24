@@ -9,7 +9,7 @@ services:
       - redis
       - evolution-postgres
     ports:
-      - "127.0.0.1:8080:8080"
+      - "8080:8080"
     volumes:
       - evolution_instances:/evolution/instances
     networks:
@@ -28,6 +28,8 @@ services:
       - "3000:80"
     networks:
       - evolution-net
+    environment:
+      - VITE_API_URL=http://evolution_api:8080
     entrypoint: /bin/sh
     command: '-c "if [ -f /etc/nginx/conf.d/nginx.conf ]; then sed -i \"s/ must-revalidate//g\" /etc/nginx/conf.d/nginx.conf; fi && nginx -g \"daemon off;\" "'
 
