@@ -28,6 +28,16 @@ services:
       - "3000:80"
     networks:
       - evolution-net
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      if [ -f /etc/nginx/conf.d/nginx.conf ]; then
+        # Este comando elimina el valor "must-revalidate" que causa el error en Nginx
+        sed -i 's/ must-revalidate//g' /etc/nginx/conf.d/nginx.conf;
+      fi &&
+      # Inicia Nginx después de la corrección
+      nginx -g 'daemon off;'
+      "
 
   redis:
     container_name: evolution_redis
