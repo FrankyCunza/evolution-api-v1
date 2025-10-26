@@ -8,8 +8,7 @@ services:
     depends_on:
       - redis
       - evolution-postgres
-      - minio # <-- AÑADIDO
-      - audio-converter # <-- AÑADIDO
+      - audio-converter # MinIO eliminado
     ports:
       - "8080:8080"
     volumes:
@@ -78,31 +77,8 @@ services:
       - "5432"
 
   # ------------------------------------------------------------------
-  # NUEVO SERVICIO: MinIO (Almacenamiento S3)
+  # SERVICIO MINIO ELIMINADO
   # ------------------------------------------------------------------
-  minio:
-    container_name: minio
-    image: bitnami/minio:latest
-    restart: always
-    ports:
-      - "9000:9000"  # API
-      - "9001:9001"  # Consola Web (opcional)
-    environment:
-      MINIO_ROOT_USER: ${S3_ACCESS_KEY} 
-      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
-      MINIO_DEFAULT_BUCKETS: ${S3_BUCKET}
-    volumes:
-      - minio_data:/data 
-    command: server /data --console-address ":9001"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-    networks:
-      - evolution-net
-    expose:
-      - "9000"
 
   # ------------------------------------------------------------------
   # NUEVO SERVICIO: Conversor de Audio a MP3
@@ -114,10 +90,9 @@ services:
     ports:
       - "4040:4040"
     env_file:
-      - .env # Usa el nuevo archivo .env para sus configuraciones
+      - .env # Usa el archivo .env principal
     depends_on:
-      minio:
-        condition: service_healthy # Espera a que MinIO esté listo
+      - evolution-postgres # Dependencia simple (MinIO eliminado)
     networks:
       - evolution-net
     expose:
@@ -127,7 +102,7 @@ volumes:
   evolution_instances:
   evolution_redis:
   postgres_data:
-  minio_data: # <--- NUEVO VOLUMEN DEFINIDO PARA MINIO
+  # minio_data ELIMINADO
 
 networks:
   evolution-net:
